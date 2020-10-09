@@ -1,0 +1,36 @@
+1、allure安装
+pip allure-pytest
+2、allure 常用特性
+   allure.feature
+   allure.story
+   allure.title
+   allure.severity
+2、查看在pytest如何使用allure
+pytest --help | findstr allure  【windows使用findstr,mac使用grep】
+3、只想通过pytest运行某个模块，或运行某个方法
+pytest test_loginallure_demo.py --allure-stories="登录成功"  -vs
+pytest test_loginallure_demo.py --allure-features="登录成功"  -vs
+注意：--allure-stories  和--allure-features不能同时使用
+
+4、allure  运行用例级别
+用例级别可以在方法上标注，也可以在类上标注
+pytest test_allureseverity_demo.py --allure-severities="normal" -vs
+pytest test_allureseverity_demo.py --allure-severities="trivial" -vs
+pytest test_allureseverity_demo.py --allure-severities="critical" -vs
+注:windows必须输入双引号
+5、增加图片和视频
+allure.attach.file("D:\JingWei\数据\内容\测试图片.jpg", name="这是一个图片", attachment_type=allure.attachment_type.JPG)
+allure.attach.file("D:\JingWei\数据\内容\音频\字说自话汉字课 6下1.mp3",name="这是一个视频",attachment_type=allure.attachment_type.MP4)
+6、清空上一次的结果后面加--clean
+allure generate ./result --clean
+pytest test_baiduproject_demo.py --alluredir ./result -vs --clean-alluredir
+7、根据生成的报告json文件打开报告 在线直接打开浏览器查看报告
+allure serve ./result【存放json文件的目录】
+8、生成默认allure报告，会在当前目录下生成一个叫allure-report的目录
+allure generate ./result
+生成报告之后不能双击打开，选择通过浏览器打开，因为需要启动一个服务
+9、生成指定目录的allure报告
+allure generate ./result2 -o report2
+10、开启本地服务，他人访问
+allure open -h 192.168.10.101 -p 8883 ./allure-report
+

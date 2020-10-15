@@ -1,0 +1,89 @@
+from selenium import webdriver
+from mypythoncode.cekaigs.base import Base
+from time import sleep
+import pytest
+#窗口切换练习&&多frame切换练习
+class TestSwitch(Base):
+    #窗口切换练习
+    # @pytest.mark.skip()
+    def test_windowswitch(self):
+        self.driver.get("https://www.baidu.com")
+        #打印当前窗口
+        print(self.driver.window_handles)
+        print(self.driver.current_window_handle)
+        self.driver.find_element_by_link_text("登录").click()
+        self.driver.find_element_by_link_text("立即注册").click()
+        print(self.driver.window_handles)
+        #获取所有窗口，返回一个列表
+        windows = self.driver.window_handles
+        sleep(3)
+        self.driver.switch_to_window(windows[-1])#-1代表最后一个窗口
+        self.driver.find_element_by_id("TANGRAM__PSP_4__userName").send_keys("username")
+        sleep(2)
+        self.driver.switch_to_window(windows[0])#0代表第一个窗口
+        self.driver.find_element_by_id("TANGRAM__PSP_11__footerULoginBtn").click()
+        sleep(2)
+
+    @pytest.mark.skip()
+    def test_iframeswitch(self):
+        self.driver.get("")#输入要打开的网址，自行输入
+        # 输入用户名
+        self.driver.find_element_by_name("username").clear()
+        self.driver.find_element_by_name("username").send_keys("")
+        # 输入密码
+        self.driver.find_element_by_name("password").clear()
+        self.driver.find_element_by_name("password").send_keys("")
+        sleep(15)
+        # 手动输入验证码
+        # 点击登录按钮
+        self.driver.find_element_by_xpath("html/body/div[1]/form/input[3]").click()
+        # 点击书单管理 .//*[@id='uls']/li[3]/a
+
+        self.driver.find_element_by_xpath(".//*[@id='uls']/li[2]/a").click()
+        sleep(3)
+        # 点击书单列表菜单
+        self.driver.find_element_by_xpath(".//*[@id='uls']/li[2]/dl/dd[1]/a/span").click()
+        sleep(3)
+        #找到frame元素
+        myframe = self.driver.find_element_by_xpath("//*[@id='container']/div/div[3]/div[2]/iframe")
+        #切换到想要操作的frame1
+        self.driver.switch_to.frame(myframe)
+        #点击查看按钮
+        self.driver.find_element_by_xpath("/html/body/div[3]/div[1]/div[2]/table/tbody/tr[1]/td[15]/div/a[1]").click()
+        sleep(2)
+        #找到frame1嵌套的frame
+        frame_2 = self.driver.find_element_by_id("layui-layer-iframe1")
+        self.driver.switch_to_frame(frame_2)
+        #点击关闭按钮
+        self.driver.find_element_by_id("close").click()
+        #切换回原来的frame
+        self.driver.switch_to.parent_frame()
+        #点击编辑按钮
+        self.driver.find_element_by_xpath("/html/body/div[3]/div[1]/div[2]/table/tbody/tr[1]/td[15]/div/a[2]").click()
+        sleep(2)
+        # 找到frame1嵌套的frame3
+        frame_3 = self.driver.find_element_by_id("layui-layer-iframe2")
+        self.driver.switch_to_frame(frame_3)
+        # 点击取消按钮
+        self.driver.find_element_by_id("close").click()
+        # 切换回原来的父frame
+        self.driver.switch_to.parent_frame()
+        # 点击测试题按钮
+        self.driver.find_element_by_xpath("/html/body/div[3]/div[1]/div[2]/table/tbody/tr[1]/td[15]/div/a[3]").click()
+        sleep(2)
+        # 方法1：找到frame1嵌套的frame4
+        # frame_3 = self.driver.find_element_by_id("layui-layer-iframe3")
+        # self.driver.switch_to_frame(frame_3)
+        # 方法2：加入frame的id即可
+        self.driver.switch_to_frame("layui-layer-iframe3")
+        # 点击取消按钮
+        self.driver.find_element_by_id("close").click()
+        sleep(3)
+        # 切换回原来的父frame
+        self.driver.switch_to.parent_frame()
+        # 切换到默认的frame  最初的frame
+        self.driver.switch_to.default_content()
+        #
+        # 点击体裁列表菜单
+        self.driver.find_element_by_xpath(".//*[@id='uls']/li[2]/dl/dd[2]/a/span").click()
+        sleep(3)

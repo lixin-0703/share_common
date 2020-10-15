@@ -1,0 +1,41 @@
+from mypythoncode.cekaigs.base import Base
+from time import sleep
+import pytest
+class Testjs(Base):
+
+    #滚动练习
+    @pytest.mark.skip()
+    def test_scorll(self):
+        self.driver.get("https://www.baidu.com")
+        self.driver.find_element_by_id("kw").send_keys("测试用例")
+        sleep(2)
+        # self.driver.find_element_by_xpath("//*[@id='kw']")
+        # self.driver.find_element_by_css_selector("#kw")
+        # self.driver.find_element_by_css_selector("kw").send_keys("测试用例")
+        baidu = self.driver.execute_script("return document.getElementById('su')")
+        baidu.click()
+        sleep(2)
+        #执行滑动屏幕的操作
+        self.driver.execute_script("document.documentElement.scrollTop=10000")
+        sleep(2)
+        #点击下一页
+        self.driver.find_element_by_xpath("//*[@id='page']/div/a[10]").click()
+        # for code in[
+        #     'return document.title','JSON.stringify(performance.timing)'
+        # ]:
+        #     self.driver.execute_script(code)
+        print(self.driver.execute_script("return document.title"))
+        print(self.driver.execute_script("JSON.stringify(performance.timing)"))
+
+
+
+    # @pytest.mark.skip()
+    def test_time(self):
+        self.driver.get("https://www.12306.cn/index/")
+        #去掉readonly属性
+        date = self.driver.execute_script("a=document.getElementById('train_date');a.removeAttribute('readonly')")
+        sleep(3)
+        #赋值
+        self.driver.execute_script("document.getElementById('train_date').value='2020-10-17'")
+        sleep(3)
+        print(self.driver.execute_script("return document.getElementById('train_date').value"))
